@@ -1,20 +1,18 @@
-name: CI
+name: Code quality
 
-on: push
+on:
+  push:
+  pull_request:
 
 jobs:
-  ci:
+  quality:
     runs-on: ubuntu-latest
-    timeout-minutes: 2
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
         with:
-          version: 9
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-      - run: pnpm i
-      - run: pnpm build
+          version: latest
+      - name: Run Biome
+        run: biome ci .
